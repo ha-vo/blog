@@ -10,12 +10,13 @@ const initWebApp = function (app) {
 }
 
 const posts = function (app) {
+    routerPosts.get('/showControll', controllers.getControllerPages)
+    routerPosts.get('/:id', controllers.getPage)
     routerPosts.get('/', controllers.getCreatePages)
     routerPosts.post('/create', controllers.create)
-    routerPosts.get('/showControll', controllers.getControllerPages)
+    routerPosts.put('/:id', controllers.update)
     app.use('/posts', routerPosts)
 }
-
 
 export default {
     initWebApp, posts

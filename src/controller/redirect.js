@@ -33,9 +33,27 @@ const getControllerPages = (req, res, next) => {
         .catch(next)
 }
 
+const getPage = (req, res, next) => {
+    model.findById(req.params.id)
+        .then(device => {
+            res.render('page', { device })
+        })
+        .catch(next)
+}
+
+const update = (req, res, next) => {
+    model.updateOne({ _id: req.params.id }, req.body)
+        .then(() => {
+            res.json(req.body)
+        })
+        .catch(next)
+}
+
 export default {
     getHomePage,
     getCreatePages,
     create,
-    getControllerPages
+    getControllerPages,
+    getPage,
+    update
 }

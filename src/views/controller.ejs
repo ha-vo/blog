@@ -1,2 +1,64 @@
 <%- include('partials/header') %>
-    <%- include('partials/header') %>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Handle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%for( let i=0; i < devices.length; i++) {%>
+                <tr>
+                    <td>
+                        <%= devices[i].name %>
+                    </td>
+                    <td>
+                        <%= devices[i].date %>
+                    </td>
+                    <td>
+                        <a href="/posts/<%=devices[i]._id %>"> Sửa</a>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirm"
+                            data-bs-whatever="{{this._id}}">Xoá</button>
+                    </td>
+                </tr>
+                <% } %>
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="confirm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Xác nhận xoá</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn xoá
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                    <button type="button" class="btn btn-danger" id="confirm_delete">Xoá</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form action="" id="formDelete" method="POST"></form>
+    <script>
+        addEventListener('DOMContentLoaded', (e) => {
+            const confirm = document.getElementById('confirm_delete')
+            const formDelete = document.getElementById('sub_form')
+            var exampleModal = document.getElementById('confirm')
+            exampleModal.addEventListener('show.bs.modal', function (event) {
+                // Button that triggered the modal
+                var button = event.relatedTarget
+                // Extract info from data-bs-* attributes
+                var recipient = button.getAttribute('data-bs-whatever')
+                confirm.onclick = () => {
+                    console.log(recipient)
+                    form.action = '/delete/' + recipient + '?_method=DELETE'
+                    form.submit()
+                }
+            })
+        })
+    </script>
