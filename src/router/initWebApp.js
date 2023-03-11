@@ -1,5 +1,6 @@
 import express from 'express'
 import controllers from '../controller/redirect.js'
+import bodyParser from 'body-parser'
 
 const router = express.Router()
 const routerPosts = express.Router()
@@ -15,6 +16,7 @@ const posts = function (app) {
     routerPosts.get('/', controllers.getCreatePages)
     routerPosts.post('/create', controllers.create)
     routerPosts.put('/:id', controllers.update)
+    routerPosts.delete('/:id', controllers.deletePost)
     app.use('/posts', routerPosts)
 }
 

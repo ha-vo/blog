@@ -44,7 +44,15 @@ const getPage = (req, res, next) => {
 const update = (req, res, next) => {
     model.updateOne({ _id: req.params.id }, req.body)
         .then(() => {
-            res.json(req.body)
+            res.redirect('/')
+        })
+        .catch(next)
+}
+
+const deletePost = (req, res, next) => {
+    model.deleteOne({ _id: req.params.id })
+        .then(() => {
+            res.redirect('back')
         })
         .catch(next)
 }
@@ -55,5 +63,6 @@ export default {
     create,
     getControllerPages,
     getPage,
-    update
+    update,
+    deletePost
 }

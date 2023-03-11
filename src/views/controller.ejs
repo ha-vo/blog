@@ -17,9 +17,9 @@
                         <%= devices[i].date %>
                     </td>
                     <td>
-                        <a href="/posts/<%=devices[i]._id %>"> Sửa</a>
+                        <a href="/posts/<%=devices[i]._id %>" class="btn btn-primary"> Sửa</a>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirm"
-                            data-bs-whatever="{{this._id}}">Xoá</button>
+                            data-bs-whatever="<%=devices[i]._id %>">Xoá</button>
                     </td>
                 </tr>
                 <% } %>
@@ -47,7 +47,7 @@
     <script>
         addEventListener('DOMContentLoaded', (e) => {
             const confirm = document.getElementById('confirm_delete')
-            const formDelete = document.getElementById('sub_form')
+            const formDelete = document.getElementById('formDelete')
             var exampleModal = document.getElementById('confirm')
             exampleModal.addEventListener('show.bs.modal', function (event) {
                 // Button that triggered the modal
@@ -56,8 +56,8 @@
                 var recipient = button.getAttribute('data-bs-whatever')
                 confirm.onclick = () => {
                     console.log(recipient)
-                    form.action = '/delete/' + recipient + '?_method=DELETE'
-                    form.submit()
+                    formDelete.action = '/posts/' + recipient + '?_method=DELETE'
+                    formDelete.submit()
                 }
             })
         })
