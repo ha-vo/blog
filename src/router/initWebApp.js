@@ -12,7 +12,7 @@ const initWebApp = function (app) {
 
 const posts = function (app) {
     routerPosts.get('/showControll', controllers.getControllerPages)
-    routerPosts.get('/:id', controllers.getPage)
+    routerPosts.get('/updatePosts/:id', controllers.getPage)
     routerPosts.get('/', controllers.getCreatePages)
     routerPosts.post('/create', controllers.create)
     routerPosts.put('/:id', controllers.update)

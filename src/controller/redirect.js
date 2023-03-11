@@ -1,7 +1,10 @@
 import model from '../model/device.js'
 
 const getHomePage = (req, res, next) => {
-    model.find({})
+    let id = req.query.id
+    if (!id) id = 1
+    let limitPage = 3
+    model.find({}).skip((id - 1) * limitPage).limit(limitPage)
         .then(devices => {
             res.render('home', { devices })
         })
@@ -26,6 +29,7 @@ const create = (req, res, next) => {
 }
 
 const getControllerPages = (req, res, next) => {
+
     model.find({})
         .then(devices => {
             res.render('controller', { devices })
@@ -57,6 +61,14 @@ const deletePost = (req, res, next) => {
         .catch(next)
 }
 
+const getPost = (req, res, next) => {
+    model.findById(req.params.id)
+        .then(device => {
+            res.render('post', { device })
+        })
+        .catch(next)
+}
+
 export default {
     getHomePage,
     getCreatePages,
@@ -64,5 +76,6 @@ export default {
     getControllerPages,
     getPage,
     update,
-    deletePost
+    deletePost,
+    getPost
 }
