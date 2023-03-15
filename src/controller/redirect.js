@@ -91,6 +91,8 @@ const checkLogin = (req, res, next) => {
     if (token) {
         jwt.verify(token, "1234", (err, decoded) => {
             if (err) {
+                res.status(400).json('Bạn Cần Đăng Nhập Lại')
+            } else {
                 next()
             }
         })

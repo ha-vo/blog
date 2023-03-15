@@ -28,7 +28,7 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Content-Type")
     next()
 })
-app.use(cookieParser())
+// app.use(cookieParser())
 
 api.initWebApp(app)
 api.posts(app)
