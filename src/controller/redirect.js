@@ -6,7 +6,8 @@ const getHomePage = (req, res, next) => {
     let limitPage = 3
     model.find({}).skip((id - 1) * limitPage).limit(limitPage)
         .then(devices => {
-            res.render('home', { devices })
+            // res.render('home', { devices })
+            res.render('login')
         })
         .catch(next)
 }
