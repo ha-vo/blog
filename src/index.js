@@ -5,9 +5,10 @@ import { fileURLToPath } from 'url'
 import db from './config/db/index.js'
 import methodOverride from 'method-override'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 
 const app = express()
-const port = 5000
+const port = 8000
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -27,6 +28,7 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Content-Type")
     next()
 })
+app.use(cookieParser())
 
 api.initWebApp(app)
 api.posts(app)

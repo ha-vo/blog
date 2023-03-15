@@ -17,7 +17,8 @@
 </head>
 <div class="container mt-3">
     <h1 class="text-center">Đăng Nhập</h1>
-    <form class="border border-dark" style="margin: 0 200px; padding: 50px; border-radius: 20px;">
+    <form class="border border-dark" style="margin: 0 200px; padding: 50px; border-radius: 20px;" method="POST"
+        action="/home">
         <div class="mb-3">
             <label for="name" class="form-label"><b>Tên người dùng:</b></label>
             <input type="text" class="form-control border border-dark" id="name" name="name"
@@ -29,14 +30,31 @@
                 placeholder="Nhập vào mật khẩu">
         </div>
         <div class="mb-3 text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-dark">Submit</button>
         </div>
 
         <div class="mb-3 mt-2 text-center">
-            <a href="" class="btn btn-dark "> Đăng nhập bằng Facebook <i class="fa-brands fa-facebook"></i></a>
+            <a href="" class="btn btn-dark rounded-pill" style="width: 400px;"> Đăng nhập bằng Facebook <i
+                    class="fa-brands fa-facebook"></i></a>
         </div>
         <div class="mb-3 mt-2 text-center">
-            <a href="" class="btn btn-dark "> Đăng nhập bằng Google <i class="fa-brands fa-google"></i></a>
+            <a href="" class="btn btn-dark rounded-pill" style="width: 400px;"> Đăng nhập bằng Google <i
+                    class="fa-brands fa-google"></i></a>
+        </div>
+        <div class="mb-3 mt-2 text-center">
+            <a href="" class="btn btn-dark rounded-pill" style="width: 400px;">Tạo tài khoản</a>
         </div>
     </form>
 </div>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js">
+    $.ajax({
+        url: '/home',
+        type:'POST',
+        data: {
+            username: $('#name').val(),
+            password: $('#password').val()
+        }
+    }).then((data) => {
+        setCookie('token',)
+    })
+</script> -->

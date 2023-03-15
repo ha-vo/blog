@@ -23,7 +23,7 @@
         </div>
         <% let len=devices.length - (devices.length % 3)%>
             <%for(let i=0; i < len + 1; i++) {%>
-                <form action="/" style="display: inline-block;" class="mt-3">
+                <form action="/home" style="display: inline-block;" class="mt-3">
                     <input type="text" name="id" id="" value="<%= i + 1%>" hidden>
                     <input type="submit" class="btn btn-primary" value="<%= i + 1%>">
                 </form>

@@ -1,13 +1,18 @@
 import model from '../model/device.js'
+import jwt from 'jsonwebtoken'
+import cookie from 'cookie'
 
+
+const getLoginPage = (req, res, next) => {
+    res.render('login')
+}
 const getHomePage = (req, res, next) => {
     let id = req.query.id
     if (!id) id = 1
     let limitPage = 3
     model.find({}).skip((id - 1) * limitPage).limit(limitPage)
         .then(devices => {
-            // res.render('home', { devices })
-            res.render('login')
+            res.render('home', { devices })
         })
         .catch(next)
 }
@@ -70,13 +75,33 @@ const getPost = (req, res, next) => {
         .catch(next)
 }
 
+const addCookie = (req, res, next) => {
+    let name = req.body.name
+    model.findOne({ username: name })
+        .then(() => {
+            let token = jwt.sign({ name }, "1234")
+            res.cookie('token', token)
+            next()
+        })
+        .catch((err) => next(err))
+
+}
+const checkLogin = (req, res, next) => {
+    let token = cookie.parse(req.headers.cookie).token
+    if (token) {
+        jwt.verify(token, "1234", (err, decoded) => {
+            if (err) {
+                next()
+            }
+        })
+    } else {
+        res.status(400).json('Bạn Cần Đăng Nhập Lại')
+    }
+}
+
+
 export default {
-    getHomePage,
-    getCreatePages,
-    create,
-    getControllerPages,
-    getPage,
-    update,
-    deletePost,
-    getPost
+    getHomePage, getCreatePages, create,
+    getControllerPages, getPage,
+    update, deletePost, getPost, addCookie, getLoginPage, checkLogin
 }
