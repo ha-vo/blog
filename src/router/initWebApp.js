@@ -7,8 +7,8 @@ const routerPosts = express.Router()
 
 const initWebApp = function (app) {
     router.get('/', controllers.getLoginPage)
+    router.post('/', controllers.addCookie, controllers.getHomePage)
     router.get('/home', controllers.checkLogin, controllers.getHomePage)
-    router.post('/home', controllers.addCookie, controllers.getHomePage)
     app.use('/', router)
 }
 

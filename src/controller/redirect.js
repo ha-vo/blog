@@ -1,6 +1,9 @@
 import model from '../model/device.js'
 import jwt from 'jsonwebtoken'
 import cookie from 'cookie'
+import passport from 'passport'
+import LocalStrategy from 'passport-local'
+
 
 
 const getLoginPage = (req, res, next) => {
@@ -76,10 +79,10 @@ const getPost = (req, res, next) => {
 }
 
 const addCookie = (req, res, next) => {
-    let name = req.body.name
-    model.findOne({ username: name })
+    let username = req.body.username
+    model.findOne({ username })
         .then(() => {
-            let token = jwt.sign({ name }, "1234")
+            let token = jwt.sign({ username }, "1234")
             res.cookie('token', token)
             next()
         })
@@ -100,10 +103,32 @@ const checkLogin = (req, res, next) => {
         res.status(400).json('Bạn Cần Đăng Nhập Lại')
     }
 }
+passport.use(new LocalStrategy(
+    function (username, password, done) {
+        model.findOne({ username, password })
+            .then(data => {
+                if (data) done(null, data)
+                done(null, false)
+            }).catch(err => done(err))
+    }
+));
 
+const passPortAuthen = (req, res, next) => {
+    passport.authenticate('local', function (err, user) {
+        if (err) return res.status(500).json('Loi server')
+        if (!user) return res.status(404).json("Tên đăng nhập và mật khẩu sai")
+        req.user = user.username
+        req.pass = user.password
+        req.logIn(user, function (err) {
+            if (err) return next(err)
+            let token = jwt.sign(user.toOject(),)
+        })
+    })
+}
 
 export default {
     getHomePage, getCreatePages, create,
     getControllerPages, getPage,
-    update, deletePost, getPost, addCookie, getLoginPage, checkLogin
+    update, deletePost, getPost, addCookie, getLoginPage, checkLogin,
+    passPortAuthen
 }
