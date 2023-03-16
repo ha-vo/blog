@@ -1,10 +1,13 @@
 import model from '../model/device.js'
 import jwt from 'jsonwebtoken'
 import cookie from 'cookie'
+import fs from 'fs'
+import * as dotenv from 'dotenv'
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 
-
+dotenv.config()
+const dir = process.env.parentDir
 
 const getLoginPage = (req, res, next) => {
     res.render('login')
@@ -79,20 +82,21 @@ const getPost = (req, res, next) => {
 }
 
 const addCookie = (req, res, next) => {
-    let username = req.body.username
-    model.findOne({ username })
+    let name = req.body.name
+    model.findOne({ username: name })
         .then(() => {
-            let token = jwt.sign({ username }, "1234")
+            let token = jwt.sign({ name }, "1234")
             res.cookie('token', token)
             next()
         })
-        .catch((err) => next(err))
+        .catch((error) => res.status(400).json(error))
 
 }
 const checkLogin = (req, res, next) => {
     let token = cookie.parse(req.headers.cookie).token
     if (token) {
-        jwt.verify(token, "1234", (err, decoded) => {
+        let publicKey = fs.readFileSync(dir + '/key/public.crt')
+        jwt.verify(token, publicKey, { algorithms: ['RS256'] }, (err, decoded) => {
             if (err) {
                 res.status(400).json('Bạn Cần Đăng Nhập Lại')
             } else {
