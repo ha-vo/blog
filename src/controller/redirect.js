@@ -5,6 +5,7 @@ import fs from 'fs'
 import * as dotenv from 'dotenv'
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
+import user from '../model/user.js'
 
 dotenv.config()
 const dir = process.env.parentDir
@@ -109,7 +110,7 @@ const checkLogin = (req, res, next) => {
 }
 passport.use(new LocalStrategy(
     function (username, password, done) {
-        model.findOne({ username, password })
+        user.findOne({ username, password })
             .then(data => {
                 if (data) done(null, data)
                 done(null, false)
@@ -119,13 +120,22 @@ passport.use(new LocalStrategy(
 
 const passPortAuthen = (req, res, next) => {
     passport.authenticate('local', function (err, user) {
+        console.log(err, user)
         if (err) return res.status(500).json('Loi server')
         if (!user) return res.status(404).json("Tên đăng nhập và mật khẩu sai")
         req.user = user.username
         req.pass = user.password
         req.logIn(user, function (err) {
             if (err) return next(err)
-            let token = jwt.sign(user.toOject(),)
+            try {
+                let privateKey = fs.readFileSync(dir + '/key/private.pem')
+                let token = jwt.sign(user.toOject(), privateKey, { algorithm: 'RS256' })
+                res.cookie('token', token)
+                return res.json("failed")
+            } catch (e) {
+                return res.status(404).json("Tên đăng nhập và mật khẩu sai")
+            }
+
         })
     })
 }
