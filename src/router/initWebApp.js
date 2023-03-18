@@ -1,12 +1,14 @@
 import express from 'express'
 import controllers from '../controller/redirect.js'
-import passport from 'passport'
+import passportLocal from 'passport'
+import passportFacebook from 'passport'
 import LocalStrategy from 'passport-local'
+import FacebookStrategy from 'passport-facebook'
 import user from '../model/user.js'
 
 const router = express.Router()
 const routerPosts = express.Router()
-passport.use(new LocalStrategy(
+passportLocal.use(new LocalStrategy(
     function (username, password, done) {
         user.findOne({ username, password })
             .then(data => {
@@ -15,14 +17,40 @@ passport.use(new LocalStrategy(
             }).catch(err => done(err))
     }
 ))
-passport.serializeUser(function (user, cb) {
+
+passportLocal.serializeUser(function (user, cb) {
     process.nextTick(function () {
         return cb(null, user);
     });
 });
 
-passport.deserializeUser(function (user, cb) {
+passportLocal.deserializeUser(function (user, cb) {
     process.nextTick(function () {
+        return cb(null, user);
+    });
+
+})
+passportFacebook.use(new FacebookStrategy({
+    clientID: "763249841771031",
+    clientSecret: "ca5f90d84d228f5dfd69f470ec5e2dc5",
+    callbackURL: "https://4793-2401-d800-b8d7-106a-8da6-97ee-963c-7154.ap.ngrok.io/auth/facebook/callback"
+},
+    function (accessToken, refreshToken, profile, cb) {
+        console.log(profile)
+        return cb(null, profile)
+    }
+))
+
+passportFacebook.serializeUser(function (user, cb) {
+    process.nextTick(function () {
+        console.log("test successfulsss")
+        return cb(null, user);
+    });
+});
+
+passportFacebook.deserializeUser(function (user, cb) {
+    process.nextTick(function () {
+        console.log("test successful")
         return cb(null, user);
     });
 });
@@ -30,8 +58,10 @@ passport.deserializeUser(function (user, cb) {
 const initWebApp = function (app) {
     router.get('/', controllers.getLoginPage)
     router.post('/',
-        passport.authenticate('local', { failureRedirect: '/' }), controllers.passPortAuthen, controllers.getHomePage)
+        passportLocal.authenticate('local', { failureRedirect: '/' }), controllers.passPortAuthenLocal, controllers.getHomePage)
     router.get('/home', controllers.checkLogin, controllers.getHomePage)
+    router.get('/auth/facebook', passportFacebook.authenticate('facebook'))
+    router.get('/auth/facebook/callback', passportFacebook.authenticate('facebook', { failureRedirect: '/' }), controllers.passPortAuthenFacebook, controllers.getHomePage)
     app.use('/', router)
 }
 

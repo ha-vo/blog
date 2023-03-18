@@ -124,11 +124,12 @@ passport.deserializeUser(function (user, cb) {
     });
 });
 
-const passPortAuthen = function (req, res, next) {
+const passPortAuthenLocal = function (req, res, next) {
     let user = req.session.passport.user
     let privateKey = fs.readFileSync(dir + '/key/private.pem')
     let name = user.username
-    jwt.sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' }, function (err, token) {
+    console.log(req.session)
+    jwt.sign({ name }, privateKey, { algorithm: 'RS256' }, function (err, token) {
         if (!err) {
             res.cookie('token', token)
             next()
@@ -138,9 +139,25 @@ const passPortAuthen = function (req, res, next) {
     })
 }
 
+const passPortAuthenFacebook = (req, res, next) => {
+    let user = req.session.passport.user
+    let privateKey = fs.readFileSync(dir + '/key/private.pem')
+    jwt.sign(`${req.user.id}`, privateKey, { algorithm: 'RS256' }, function (err, token) {
+        if (!err) {
+            res.cookie('token', token)
+            user.findOne({ username: req.user.displayName })
+                .catch(() => {
+                    user.create({ username: req.user.displayName, _id: req.user.id })
+                    next()
+                })
+        } else {
+            res.status(400).json('err')
+        }
+    })
+}
 export default {
     getHomePage, getCreatePages, create,
     getControllerPages, getPage,
-    update, deletePost, getPost, addCookie, getLoginPage, checkLogin,
-    passPortAuthen
+    update, deletePost, getPost, getLoginPage, checkLogin,
+    passPortAuthenLocal, passPortAuthenFacebook
 }

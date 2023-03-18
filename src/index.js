@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url'
 import db from './config/db/index.js'
 import methodOverride from 'method-override'
 import session from 'express-session'
+import passport from 'passport'
 
 
 const app = express()
@@ -34,6 +35,8 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: true }
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 // app.use(cookieParser())
 
 api.initWebApp(app)
