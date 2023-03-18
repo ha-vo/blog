@@ -1,13 +1,36 @@
 import express from 'express'
 import controllers from '../controller/redirect.js'
-import bodyParser from 'body-parser'
+import passport from 'passport'
+import LocalStrategy from 'passport-local'
+import user from '../model/user.js'
 
 const router = express.Router()
 const routerPosts = express.Router()
+passport.use(new LocalStrategy(
+    function (username, password, done) {
+        user.findOne({ username, password })
+            .then(data => {
+                if (data) return done(null, data)
+                return done(null, false)
+            }).catch(err => done(err))
+    }
+))
+passport.serializeUser(function (user, cb) {
+    process.nextTick(function () {
+        return cb(null, user);
+    });
+});
+
+passport.deserializeUser(function (user, cb) {
+    process.nextTick(function () {
+        return cb(null, user);
+    });
+});
 
 const initWebApp = function (app) {
     router.get('/', controllers.getLoginPage)
-    router.post('/', controllers.passPortAuthen, controllers.getHomePage)
+    router.post('/',
+        passport.authenticate('local', { failureRedirect: '/' }), controllers.passPortAuthen, controllers.getHomePage)
     router.get('/home', controllers.checkLogin, controllers.getHomePage)
     app.use('/', router)
 }

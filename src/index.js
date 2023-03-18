@@ -4,8 +4,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import db from './config/db/index.js'
 import methodOverride from 'method-override'
-import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
+import session from 'express-session'
+
 
 const app = express()
 const port = 8000
@@ -28,6 +28,12 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", "Content-Type")
     next()
 })
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}))
 // app.use(cookieParser())
 
 api.initWebApp(app)

@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv'
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import user from '../model/user.js'
+import { request } from 'http'
 
 dotenv.config()
 const dir = process.env.parentDir
@@ -82,17 +83,7 @@ const getPost = (req, res, next) => {
         .catch(next)
 }
 
-const addCookie = (req, res, next) => {
-    let name = req.body.name
-    model.findOne({ username: name })
-        .then(() => {
-            let token = jwt.sign({ name }, "1234")
-            res.cookie('token', token)
-            next()
-        })
-        .catch((error) => res.status(400).json(error))
 
-}
 const checkLogin = (req, res, next) => {
     let token = cookie.parse(req.headers.cookie).token
     if (token) {
@@ -110,33 +101,40 @@ const checkLogin = (req, res, next) => {
 }
 passport.use(new LocalStrategy(
     function (username, password, done) {
+        console.log(username, password)
         user.findOne({ username, password })
             .then(data => {
-                if (data) done(null, data)
-                done(null, false)
+                if (data) return done(null, data)
+                return done(null, false)
             }).catch(err => done(err))
     }
-));
+))
+passport.serializeUser(function (user, cb) {
+    process.nextTick(function () {
+        return cb(null, {
+            username: user.username,
+            password: user.password
+        });
+    });
+});
 
-const passPortAuthen = (req, res, next) => {
-    passport.authenticate('local', function (err, user) {
-        console.log(err, user)
-        if (err) return res.status(500).json('Loi server')
-        if (!user) return res.status(404).json("Tên đăng nhập và mật khẩu sai")
-        req.user = user.username
-        req.pass = user.password
-        req.logIn(user, function (err) {
-            if (err) return next(err)
-            try {
-                let privateKey = fs.readFileSync(dir + '/key/private.pem')
-                let token = jwt.sign(user.toOject(), privateKey, { algorithm: 'RS256' })
-                res.cookie('token', token)
-                return res.json("failed")
-            } catch (e) {
-                return res.status(404).json("Tên đăng nhập và mật khẩu sai")
-            }
+passport.deserializeUser(function (user, cb) {
+    process.nextTick(function () {
+        return cb(null, user);
+    });
+});
 
-        })
+const passPortAuthen = function (req, res, next) {
+    let user = req.session.passport.user
+    let privateKey = fs.readFileSync(dir + '/key/private.pem')
+    let name = user.username
+    jwt.sign({ foo: 'bar' }, privateKey, { algorithm: 'RS256' }, function (err, token) {
+        if (!err) {
+            res.cookie('token', token)
+            next()
+        } else {
+            res.status(400).json('err')
+        }
     })
 }
 
