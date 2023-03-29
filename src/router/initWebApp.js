@@ -33,10 +33,9 @@ passportLocal.deserializeUser(function (user, cb) {
 passportFacebook.use(new FacebookStrategy({
     clientID: "763249841771031",
     clientSecret: "ca5f90d84d228f5dfd69f470ec5e2dc5",
-    callbackURL: "https://4793-2401-d800-b8d7-106a-8da6-97ee-963c-7154.ap.ngrok.io/auth/facebook/callback"
+    callbackURL: "https://adad-113-161-210-139.ap.ngrok.io/auth/facebook/callback"
 },
     function (accessToken, refreshToken, profile, cb) {
-        console.log(profile)
         return cb(null, profile)
     }
 ))

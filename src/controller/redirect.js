@@ -125,9 +125,9 @@ passport.deserializeUser(function (user, cb) {
 });
 
 const passPortAuthenLocal = function (req, res, next) {
-    let user = req.session.passport.user
+    let user1 = req.session.passport.user
     let privateKey = fs.readFileSync(dir + '/key/private.pem')
-    let name = user.username
+    let name = user1.username
     console.log(req.session)
     jwt.sign({ name }, privateKey, { algorithm: 'RS256' }, function (err, token) {
         if (!err) {
@@ -140,14 +140,23 @@ const passPortAuthenLocal = function (req, res, next) {
 }
 
 const passPortAuthenFacebook = (req, res, next) => {
-    let user = req.session.passport.user
+    let user1 = req.user
+    console.log(user1)
     let privateKey = fs.readFileSync(dir + '/key/private.pem')
     jwt.sign(`${req.user.id}`, privateKey, { algorithm: 'RS256' }, function (err, token) {
         if (!err) {
             res.cookie('token', token)
-            user.findOne({ username: req.user.displayName })
+            user.findOne({ id: req.user.id })
+                .then(() => {
+                    console.log("Đã tìm thấy")
+                    next()
+                })
                 .catch(() => {
-                    user.create({ username: req.user.displayName, _id: req.user.id })
+                    console.log("done")
+                    user.create({
+                        id: String(req.user.id),
+                        username: req.user.displayName
+                    })
                     next()
                 })
         } else {

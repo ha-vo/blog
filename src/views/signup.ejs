@@ -16,7 +16,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <div class="container mt-3">
-    <h1 class="text-center">Đăng Nhập</h1>
+    <h1 class="text-center">Đăng Ký</h1>
     <form class="border border-dark" style="margin: 0 200px; padding: 50px; border-radius: 20px;" method="POST"
         action="/">
         <div class="mb-3">
@@ -29,28 +29,15 @@
             <input type="password" class="form-control border border-dark" id="password" name="password"
                 placeholder="Nhập vào mật khẩu">
         </div>
+        <div class="mb-3">
+            <label for="password" class="form-label"><b>Xác nhận mật khẩu:</b></label>
+            <input type="password" class="form-control border border-dark" id="password" name="password"
+                placeholder="Nhập vào mật khẩu">
+        </div>
         <div class="mb-3 text-center">
-            <button type="submit" class="btn btn-dark">Đăng Nhập</button>
+            <button type="submit" class="btn btn-dark">Đăng ký</button>
         </div>
 
-        <div class="mb-3 mt-2 text-center">
-            <a href="/auth/facebook" class="btn btn-dark rounded-pill" style="width: 400px;"> Đăng nhập bằng Facebook <i
-                    class="fa-brands fa-facebook"></i></a>
-        </div>
-        <div class="mb-3 mt-2 text-center">
-            <a href="" class="btn btn-dark rounded-pill" style="width: 400px;">Tạo tài khoản</a>
-        </div>
+
     </form>
 </div>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js">
-    $.ajax({
-        url: '/home',
-        type:'POST',
-        data: {
-            username: $('#name').val(),
-            password: $('#password').val()
-        }
-    }).then((data) => {
-        setCookie('token',)
-    })
-</script> -->
