@@ -27,9 +27,9 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup ">
                 <div class="navbar-nav ">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
-                    <% if (user1.username=='admin' ) {%>
-                        <a class="nav-link" href="/posts">Thêm bài viết mới</a>
-                        <a class="nav-link" href="/posts/showControll">Quản lý bài viết</a>
+                    <% if (user1=='admin' ) {%>
+                        <a class="nav-link" href="/posts">Thêm khoá học mới</a>
+                        <a class="nav-link" href="/posts/showControll">Quản lý khoá học </a>
                         <%}else {%>
                             <a class="nav-link" href="/mycourses">Khoá học của tôi</a>
                             <%}%>
@@ -66,10 +66,16 @@
                             <p class="card-text">
                                 <%= devices[i].description %>
                             </p>
-                            <a href="/posts/<%= devices[i].id %>" class="btn btn-dark">Xem chi tiết</a> <i
-                                class="fa-solid fa-dollar-sign mt-2" style="float:right;">
-                                <%= devices[i].price %>
-                            </i>
+                            <%if (user1!="admin" ){ %>
+                                <a href="/posts/<%= devices[i].id %>" class="btn btn-dark">Xem chi tiết</a>
+                                <%}else{%>
+                                    <a href="/posts/<%= devices[i].id %>" class="btn btn-dark">Xem chi tiết</a>
+                                    <a href="/posts/<%= devices[i].id %>/lesson" class="btn btn-dark">Cài đặt khoá
+                                        học</a>
+                                    <%}%>
+                                        <i class="fa-solid fa-dollar-sign mt-2" style="float:right;">
+                                            <%= devices[i].price %>
+                                        </i>
                         </div>
                     </div>
                 </div>

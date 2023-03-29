@@ -53,26 +53,19 @@
                 </div>
                 <%}%>
     </nav>
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-3">
-                <ul>
-                    <li>
-                        <%= device.name %>
-                    </li>
-                    <li>
-                        <%= device.description %>
-                    </li>
-                    <li>
-                        <%= device.price %>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-9">
-                <img src="<%= device.img %>" alt="">
-            </div>
+    <h1 class="text-center">Thêm vào khoá học mới</h1>
+    <form action="/posts/lesson" method="POST" class="p-5">
+        <div class="mb-3">
+            <label for="title" class="form-label">Tiêu đề</label>
+            <input type="text" class="form-control" id="title" placeholder="Nhập vào tiêu đề video" name="title">
         </div>
-    </div>
+        <div class="mb-3">
+            <label for="id" class="form-label">Id video</label>
+            <input type="text" class="form-control" id="id" placeholder="Nhập vào id video" name="videoID">
+        </div>
+        <input value="<%=id%>" hidden name="courseId">
+        <button type="submit" class="btn btn-dark">Thêm</button>
+    </form>
 </body>
 
 </html>

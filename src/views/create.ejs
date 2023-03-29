@@ -28,8 +28,8 @@
                 <div class="navbar-nav ">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                     <% if (user1=='admin' ) {%>
-                        <a class="nav-link" href="/posts">Thêm bài viết mới</a>
-                        <a class="nav-link" href="/posts/showControll">Quản lý bài viết</a>
+                        <a class="nav-link" href="/posts">Thêm khoá học mới</a>
+                        <a class="nav-link" href="/posts/showControll">Quản lý khoá học</a>
                         <%}else {%>
                             <a class="nav-link" href="/mycourses">Khoá học của tôi</a>
                             <%}%>
@@ -56,7 +56,7 @@
     <div class="container m-5" style="padding-left: 300px; padding-right: 300px;">
         <form method="POST" action="/posts/create">
             <div class="mb-3">
-                <label for="name" class="form-label">Tên sản phẩm</label>
+                <label for="name" class="form-label">Tên khoá học</label>
                 <input type="text" class="form-control" id="name" name="name">
             </div>
             <div class="mb-3">

@@ -5,6 +5,7 @@ import passportFacebook from 'passport'
 import LocalStrategy from 'passport-local'
 import FacebookStrategy from 'passport-facebook'
 import user from '../model/user.js'
+import lesson from '../model/lesson.js'
 
 const router = express.Router()
 const routerPosts = express.Router()
@@ -64,14 +65,20 @@ const initWebApp = function (app) {
     app.use('/', router)
 }
 
+
+
 const posts = function (app) {
+
     routerPosts.get('/showControll', controllers.checkLogin, controllers.getControllerPages)
     routerPosts.get('/updatePosts/:id', controllers.checkLogin, controllers.getPage)
     routerPosts.get('/:id', controllers.checkLogin, controllers.getPost)
     routerPosts.get('/', controllers.checkLogin, controllers.getCreatePages)
-    routerPosts.post('/create', controllers.checkLogin, controllers.create)
-    routerPosts.put('/:id', controllers.checkLogin, controllers.update)
-    routerPosts.delete('/:id', controllers.checkLogin, controllers.deletePost)
+    routerPosts.get('/:id/lession', controllers.checkLogin, controllers.getLessonPage)
+
+    routerPosts.post('/create', controllers.create)
+    routerPosts.put('/:id', controllers.update)
+    routerPosts.delete('/:id', controllers.deletePost)
+
     app.use('/posts', controllers.checkLogin, routerPosts)
 }
 

@@ -7,6 +7,7 @@ import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import user from '../model/user.js'
 import { request } from 'http'
+import lesson from '../model/lesson.js'
 
 dotenv.config()
 const dir = process.env.parentDir
@@ -146,13 +147,14 @@ const passPortAuthenLocal = function (req, res, next) {
     let user1 = req.session.passport.user
     let privateKey = fs.readFileSync(dir + '/key/private.pem')
     let name = user1.username
+    console.log(name)
     jwt.sign({ name }, privateKey, { algorithm: 'RS256' }, function (err, token) {
         if (!err) {
             res.cookie('token', token)
 
             req.login = 1
             req.username = user1
-            next()
+            res.redirect('/')
         } else {
             res.status(400).json('err')
         }
@@ -184,9 +186,25 @@ const passPortAuthenFacebook = (req, res, next) => {
         }
     })
 }
+
+const getLessonPage = (req, res, next) => {
+    let id = req.params.id
+    let user1 = req.username
+    let login = req.login
+    res.render('addLesson', { user1, login, id })
+}
+
+const addLesson = (req, res, next) => {
+    let body = req.body
+    console.log(body)
+    lesson.create({ body })
+        .then(next())
+        .catch((err) => res.send(err))
+
+}
 export default {
     getHomePage, getCreatePages, create,
     getControllerPages, getPage,
     update, deletePost, getPost, getLoginPage, checkLogin,
-    passPortAuthenLocal, passPortAuthenFacebook
+    passPortAuthenLocal, passPortAuthenFacebook, getLessonPage, addLesson
 }
