@@ -14,21 +14,25 @@ const dir = process.env.parentDir
 const getLoginPage = (req, res, next) => {
     res.render('login')
 }
-const getHomePage = (req, res, next) => {
+const getHomePage = async (req, res, next) => {
     let id = req.query.id
     if (!id) id = 1
     let limitPage = 3
+    let login = req.login
+    let user1 = req.username
     model.find({}).skip((id - 1) * limitPage).limit(limitPage)
         .then(devices => {
-            res.render('home', { devices })
+            res.render('home', { devices, login, user1 })
         })
         .catch(next)
 }
 
 const getCreatePages = (req, res, next) => {
+    let login = req.login
+    let user1 = req.username
     model.find({})
         .then(devices => {
-            res.render('create')
+            res.render('create', { login, user1 })
         })
         .catch(next)
 }
@@ -43,18 +47,21 @@ const create = (req, res, next) => {
 }
 
 const getControllerPages = (req, res, next) => {
-
+    let login = req.login
+    let user1 = req.username
     model.find({})
         .then(devices => {
-            res.render('controller', { devices })
+            res.render('controller', { devices, login, user1 })
         })
         .catch(next)
 }
 
 const getPage = (req, res, next) => {
+    let login = req.login
+    let user1 = req.username
     model.findById(req.params.id)
         .then(device => {
-            res.render('page', { device })
+            res.render('page', { device, login, user1 })
         })
         .catch(next)
 }
@@ -76,27 +83,38 @@ const deletePost = (req, res, next) => {
 }
 
 const getPost = (req, res, next) => {
+    let login = req.login
+    let user1 = req.username
     model.findById(req.params.id)
         .then(device => {
-            res.render('post', { device })
+            res.render('post', { device, login, user1 })
         })
         .catch(next)
 }
 
 
 const checkLogin = (req, res, next) => {
-    let token = cookie.parse(req.headers.cookie).token
-    if (token) {
-        let publicKey = fs.readFileSync(dir + '/key/public.crt')
-        jwt.verify(token, publicKey, { algorithms: ['RS256'] }, (err, decoded) => {
-            if (err) {
-                res.status(400).json('Bạn Cần Đăng Nhập Lại')
-            } else {
-                next()
-            }
-        })
+    if (req.headers.cookie) {
+        let token = cookie.parse(req.headers.cookie).token
+        console.log(token)
+        if (token) {
+            let publicKey = fs.readFileSync(dir + '/key/public.crt')
+            jwt.verify(token, publicKey, { algorithms: ['RS256'] }, (err, decoded) => {
+                if (err) {
+                    req.login = 0
+                    next()
+                } else {
+                    req.login = 1
+                    req.username = String(decoded.name)
+                    next()
+                }
+            })
+        } else {
+            res.status(400).json('Bạn Cần Đăng Nhập Lại')
+        }
     } else {
-        res.status(400).json('Bạn Cần Đăng Nhập Lại')
+        req.login = 0
+        next()
     }
 }
 passport.use(new LocalStrategy(
@@ -128,10 +146,12 @@ const passPortAuthenLocal = function (req, res, next) {
     let user1 = req.session.passport.user
     let privateKey = fs.readFileSync(dir + '/key/private.pem')
     let name = user1.username
-    console.log(req.session)
     jwt.sign({ name }, privateKey, { algorithm: 'RS256' }, function (err, token) {
         if (!err) {
             res.cookie('token', token)
+
+            req.login = 1
+            req.username = user1
             next()
         } else {
             res.status(400).json('err')
@@ -143,7 +163,7 @@ const passPortAuthenFacebook = (req, res, next) => {
     let user1 = req.user
     console.log(user1)
     let privateKey = fs.readFileSync(dir + '/key/private.pem')
-    jwt.sign(`${req.user.id}`, privateKey, { algorithm: 'RS256' }, function (err, token) {
+    jwt.sign(`${req.user.displayName}`, privateKey, { algorithm: 'RS256' }, function (err, token) {
         if (!err) {
             res.cookie('token', token)
             user.findOne({ id: req.user.id })
@@ -155,7 +175,7 @@ const passPortAuthenFacebook = (req, res, next) => {
                     console.log("done")
                     user.create({
                         id: String(req.user.id),
-                        username: req.user.displayName
+                        username: req.user.displayName.username
                     })
                     next()
                 })

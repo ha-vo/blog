@@ -1,4 +1,58 @@
-<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark row">
+        <div class="container-fluid col">
+            <a class="navbar-brand" href="/">F8 fake</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup ">
+                <div class="navbar-nav ">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <% if (user1=='admin' ) {%>
+                        <a class="nav-link" href="/posts">Thêm bài viết mới</a>
+                        <a class="nav-link" href="/posts/showControll">Quản lý bài viết</a>
+                        <%}else {%>
+                            <a class="nav-link" href="/mycourses">Khoá học của tôi</a>
+                            <%}%>
+                </div>
+            </div>
+        </div>
+        <% if (login==0){%>
+            <div class="btn-login-logout col" style="display: inline; ">
+                <a href="/signup" class="btn btn-light m-2" style="float: right;">Đăng Ký</a>
+                <a href="/login" class="btn btn-light m-2" style="float: right;">Đăng Nhập</a>
+            </div>
+            <%}else {%>
+                <div class="btn-login-logout col" style="display: inline; ">
+                    <div style="display: inline; float: right; color: white">
+                        <div class="color-white" style="margin-right: 50px;">
+                            <%= user1%> <img src="/imgs/avt.png" alt="" style="width : 30px; height: 30px"
+                                    class="rounded-circle">
+                        </div>
+
+                    </div>
+                </div>
+                <%}%>
+    </nav>
     <div class="container mt-4">
         <form method="POST" action="/posts/<%=device._id%>?_method=PUT">
             <div class="mb-3">
@@ -22,3 +76,6 @@
             <input type="submit" class="btn btn-primary" value="Lưu">
         </form>
     </div>
+</body>
+
+</html>

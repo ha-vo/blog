@@ -55,10 +55,10 @@ passportFacebook.deserializeUser(function (user, cb) {
 });
 
 const initWebApp = function (app) {
-    router.get('/', controllers.getLoginPage)
-    router.post('/',
+    router.get('/', controllers.checkLogin, controllers.getHomePage)
+    router.post('/login',
         passportLocal.authenticate('local', { failureRedirect: '/' }), controllers.passPortAuthenLocal, controllers.getHomePage)
-    router.get('/home', controllers.checkLogin, controllers.getHomePage)
+    router.get('/login', controllers.getLoginPage)
     router.get('/auth/facebook', passportFacebook.authenticate('facebook'))
     router.get('/auth/facebook/callback', passportFacebook.authenticate('facebook', { failureRedirect: '/' }), controllers.passPortAuthenFacebook, controllers.getHomePage)
     app.use('/', router)
