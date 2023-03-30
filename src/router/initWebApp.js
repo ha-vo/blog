@@ -73,8 +73,8 @@ const posts = function (app) {
     routerPosts.get('/updatePosts/:id', controllers.checkLogin, controllers.getPage)
     routerPosts.get('/:id', controllers.checkLogin, controllers.getPost)
     routerPosts.get('/', controllers.checkLogin, controllers.getCreatePages)
-    routerPosts.get('/:id/lession', controllers.checkLogin, controllers.getLessonPage)
-
+    routerPosts.get('/:id/lesson', controllers.checkLogin, controllers.getLessonPage)
+    routerPosts.post('/:id/lesson', controllers.addLesson)
     routerPosts.post('/create', controllers.create)
     routerPosts.put('/:id', controllers.update)
     routerPosts.delete('/:id', controllers.deletePost)

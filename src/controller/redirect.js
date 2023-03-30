@@ -86,18 +86,21 @@ const deletePost = (req, res, next) => {
 const getPost = (req, res, next) => {
     let login = req.login
     let user1 = req.username
-    model.findById(req.params.id)
-        .then(device => {
-            res.render('post', { device, login, user1 })
-        })
-        .catch(next)
+    lesson.find({ courseID: req.params.id })
+        .then((data) => {
+            model.findById(req.params.id)
+                .then(device => {
+                    res.render('detailCourse', { device, login, user1, data })
+                })
+                .catch(next)
+        }).catch((err) => res.send(err))
+
 }
 
 
 const checkLogin = (req, res, next) => {
     if (req.headers.cookie) {
         let token = cookie.parse(req.headers.cookie).token
-        console.log(token)
         if (token) {
             let publicKey = fs.readFileSync(dir + '/key/public.crt')
             jwt.verify(token, publicKey, { algorithms: ['RS256'] }, (err, decoded) => {
@@ -195,12 +198,9 @@ const getLessonPage = (req, res, next) => {
 }
 
 const addLesson = (req, res, next) => {
-    let body = req.body
-    console.log(body)
-    lesson.create({ body })
-        .then(next())
-        .catch((err) => res.send(err))
-
+    lesson.create(req.body)
+        .then(() => res.redirect('back'))
+        .catch(err => res.send(err))
 }
 export default {
     getHomePage, getCreatePages, create,

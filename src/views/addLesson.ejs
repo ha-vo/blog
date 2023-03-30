@@ -54,7 +54,7 @@
                 <%}%>
     </nav>
     <h1 class="text-center">Thêm vào khoá học mới</h1>
-    <form action="/posts/lesson" method="POST" class="p-5">
+    <form action="/posts/<%=id%>/lesson" method="POST" class="p-5">
         <div class="mb-3">
             <label for="title" class="form-label">Tiêu đề</label>
             <input type="text" class="form-control" id="title" placeholder="Nhập vào tiêu đề video" name="title">
@@ -63,7 +63,7 @@
             <label for="id" class="form-label">Id video</label>
             <input type="text" class="form-control" id="id" placeholder="Nhập vào id video" name="videoID">
         </div>
-        <input value="<%=id%>" hidden name="courseId">
+        <input value="<%=id%>" hidden name="courseID">
         <button type="submit" class="btn btn-dark">Thêm</button>
     </form>
 </body>

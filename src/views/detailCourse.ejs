@@ -55,21 +55,38 @@
     </nav>
     <div class="container mt-4">
         <div class="row">
-            <div class="col-3">
-                <ul>
-                    <li>
-                        <%= device.name %>
-                    </li>
-                    <li>
-                        <%= device.description %>
-                    </li>
-                    <li>
-                        <%= device.price %>
-                    </li>
-                </ul>
-            </div>
             <div class="col-9">
-                <img src="<%= device.img %>" alt="">
+                <h1>
+                    <%= device.name %>
+                </h1>
+                <p>
+                    <%= device.description %>
+                </p>
+                <h2>Nội dung khoá học</h2>
+                <% for( let i=0; i< data.length; i++){%>
+                    <div class="bg-light  rounded m-3 p-2 text-dark" style="height: 50px;">
+                        <%= i+1 %>.
+                            <%= data[i].title %>
+                    </div>
+                    <%}if(data.length==0){%>
+                        <h3>Hiện chưa có khoá học nào được đăng</h3>
+                        <%}%>
+
+
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <img src="<%= device.img %>" alt="" style="width: 300px;">
+                </div>
+                <div style="display: block; font-size: 30px; " class=" text-center p-2 ">
+                    <b>
+                        <%= device.price %> $
+                    </b>
+                </div>
+                <div class=" text-center">
+                    <a class="btn btn-dark" href="/">Đăng ký học</a>
+                </div>
+
             </div>
         </div>
     </div>

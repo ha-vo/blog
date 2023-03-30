@@ -41,6 +41,9 @@ app.use(passport.session())
 
 api.initWebApp(app)
 api.posts(app)
+app.locals.add = function (index) {
+    return index + 1
+}
 
 // app.use(methodOverride('X-HTTP-Method-Override'))
 
