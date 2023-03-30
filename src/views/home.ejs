@@ -43,13 +43,19 @@
             </div>
             <%}else {%>
                 <div class="btn-login-logout col" style="display: inline; ">
-                    <div style="display: inline; float: right; color: white">
-                        <div class="color-white" style="margin-right: 50px;">
-                            <%= user1%> <img src="/imgs/avt.png" alt="" style="width : 30px; height: 30px"
-                                    class="rounded-circle">
+                    <div style="display: inline; float: right; color: white" class="">
+                        <div class="dropdown" style="margin-right: 30px;">
+                            <a class="text-decoration-none text-white" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <%= user1%> <img src="/imgs/avt.png" alt="" style="width : 30px; height: 30px"
+                                        class="rounded-circle">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="/logout">Đăng Xuất</a></li>
+                            </ul>
                         </div>
-
                     </div>
+
                 </div>
                 <%}%>
     </nav>
@@ -70,8 +76,7 @@
                                 <a href="/posts/<%= devices[i].id %>" class="btn btn-dark">Xem chi tiết</a>
                                 <%}else{%>
                                     <a href="/posts/<%= devices[i].id %>" class="btn btn-dark">Xem chi tiết</a>
-                                    <a href="/posts/<%= devices[i].id %>/lesson" class="btn btn-dark">Cài đặt khoá
-                                        học</a>
+                                    <a href="/posts/<%= devices[i].id %>/lesson" class="btn btn-dark">Thêm khoá học</a>
                                     <%}%>
                                         <i class="fa-solid fa-dollar-sign mt-2" style="float:right;">
                                             <%= devices[i].price %>

@@ -68,7 +68,7 @@
             <%for(let i=0; i < data.length; i++){%>
                 <div class="bg-light text-dark rounded mt-3 p-2 " style="height: 50px;">
                     <%= i+1 %>
-                        <a href="/lesson/<%=user1%>/<%=id%>/<%=i%>" class="text-decoration-none text-dark">
+                        <a href="/lesson/<%=user1%>/<%=id%>/?index=<%=i%>" class="text-decoration-none text-dark">
                             <%=data[i].title%>
                         </a>
                 </div>

@@ -41,6 +41,7 @@ app.use(passport.session())
 
 api.initWebApp(app)
 api.posts(app)
+api.lessonRouter(app)
 app.locals.add = function (index) {
     return index + 1
 }

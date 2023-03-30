@@ -8,6 +8,7 @@ import LocalStrategy from 'passport-local'
 import user from '../model/user.js'
 import { request } from 'http'
 import lesson from '../model/lesson.js'
+import mycourses from '../model/mycourses.js'
 
 dotenv.config()
 const dir = process.env.parentDir
@@ -87,14 +88,25 @@ const getPost = (req, res, next) => {
     let id = req.params.id
     let login = req.login
     let user1 = req.username
-    lesson.find({ courseID: req.params.id })
+    mycourses.find({
+        username: user1,
+        courseID: id
+    })
         .then((data) => {
-            model.findById(req.params.id)
-                .then(device => {
-                    res.render('detailCourse', { device, login, user1, data, id })
-                })
-                .catch(next)
+            if (data.length > 0) {
+                res.redirect(`/lesson/${user1}/${id}`)
+            } else {
+                lesson.find({ courseID: id })
+                    .then((data) => {
+                        model.findById(req.params.id)
+                            .then(device => {
+                                res.render('detailCourse', { device, id, login, user1, data })
+                            })
+                            .catch((err) => res.send(err))
+                    })
+            }
         }).catch((err) => res.send(err))
+
 
 }
 
@@ -115,7 +127,8 @@ const checkLogin = (req, res, next) => {
                 }
             })
         } else {
-            res.status(400).json('Bạn Cần Đăng Nhập Lại')
+            req.login = 0
+            next()
         }
     } else {
         req.login = 0
@@ -191,7 +204,7 @@ const passPortAuthenFacebook = (req, res, next) => {
     })
 }
 
-const getLessonPage = (req, res, next) => {
+const getAddLessonPage = (req, res, next) => {
     let id = req.params.id
     let user1 = req.username
     let login = req.login
@@ -205,26 +218,73 @@ const addLesson = (req, res, next) => {
 }
 
 const getLessonsPage = (req, res, next) => {
-    let index = req.params.index
-    if (!index) index = 1
+    let index = req.query.index
+    if (!index) index = 0
     let login = req.login
     let id = req.params.id
     let user1 = req.params.user
-    user.updateOne({ filter: { username: user1 }, update: { courseID: id } })
-        .then(() => {
+    mycourses.create({
+        username: user1,
+        courseID: id,
+    })
+        .then((data) => {
+            console.log(data)
             lesson.find({ courseID: id })
                 .then((data) => {
-                    console.log(data)
                     res.render('lessons', { id, user1, data, login, index })
                 })
         })
         .catch((err) => { response.send(err) })
 }
+
+const getUpdateLessonPage = (req, res, next) => {
+    let idLesson = req.params.id
+    let login = req.login
+    let user1 = req.user
+    lesson.findById(idLesson)
+        .then((data) => {
+            res.render('updateLesson', { data, user1, login })
+        })
+}
+
+const updateLesson = (req, res, next) => {
+    let id = req.params.id
+    lesson.updateOne({ _id: id }, req.body)
+        .then(() => {
+            res.redirect('/')
+        })
+        .catch(err => {
+            res.send(err)
+        })
+}
+
+const deleteLesson = (req, res, next) => {
+    let id = req.params.id
+    lesson.deleteOne({ _id: id })
+        .then(() => res.redirect('back'))
+        .catch(err => res.send(err))
+
+}
+
+const logout = (req, res, next) => {
+    res.clearCookie('token')
+    res.redirect('/')
+}
+
+const getMyCourses = (req, res, next) => {
+    let user1 = req.username
+    let login = req.login
+    mycourses.find({ username: user1 })
+        .then((data) => {
+            console.log(user1)
+            res.render('mycourse', { data, user1, login })
+        }).catch((err) => { res.send(err) })
+}
 export default {
     getHomePage, getCreatePages, create,
     getControllerPages, getPage,
     update, deletePost, getPost, getLoginPage, checkLogin,
-    passPortAuthenLocal, passPortAuthenFacebook, getLessonPage, addLesson,
-    getLessonsPage
+    passPortAuthenLocal, passPortAuthenFacebook, addLesson,
+    getLessonsPage, getUpdateLessonPage, updateLesson, deleteLesson, logout, getAddLessonPage, getMyCourses
 
 }
