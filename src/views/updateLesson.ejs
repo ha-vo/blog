@@ -54,56 +54,27 @@
                 <%}%>
     </nav>
     <div class="container mt-4">
-        <div class="row">
-            <div class="col-9">
-                <h1>
-                    <%= device.name %>
-                </h1>
-                <p>
-                    <%= device.description %>
-                </p>
-                <h2>Nội dung khoá học</h2>
-                <% for( let i=0; i< data.length; i++){%>
-                    <div class="bg-light  rounded m-3 p-2 text-dark row" style="height: 50px;">
-                        <div class="col-9">
-                            <%= i+1 %>.
-                                <%= data[i].title %>
-                        </div>
-                        <div class="col-3">
-                            <%if (user1=='admin' ) {%>
-                                <a href="" class="btn btn-dark">Sửa</a>
-                                <a href="" class="btn btn-dark">Xoá</a>
-                                <%}%>
-                        </div>
-                    </div>
-                    <%}if(data.length==0){%>
-                        <h3>Hiện chưa có khoá học nào được đăng</h3>
-                        <%}%>
+        <form method="POST" action="?_method=PUT">
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên</label>
+                <input type="text" class="form-control" id="name" value="<%= device.name %>" name="name">
 
             </div>
-            <div class="col-3">
-                <div class="row">
-                    <img src="<%= device.img %>" alt="" style="width: 300px;">
-                </div>
-                <div style="display: block; font-size: 30px; " class=" text-center p-2 ">
-                    <b>
-                        <%= device.price %> $
-                    </b>
-                </div>
-                <div class=" text-center">
-                    <%if (user1=='admin' ) {%>
-                        <a class="btn btn-dark" href="/lesson/<%=user1%>/<%=id%>">Xem các bài học</a>
-                        <%}else{%>
-                            <a class="btn btn-dark" href="/<%=user1%>/lessons">Học Ngay</a>
-                            <%}%>
-
-                </div>
-                <div class="text-center mt-3">
-                    <b>Tổng số bài học <%=data.length%></b>
-                </div>
-
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô tả</label>
+                <input type="text" class="form-control" id="description" value="<%= device.description %>"
+                    name="description">
             </div>
-        </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Giá</label>
+                <input type="text" class="form-control" id="price" value="<%= device.price %>" name="price">
+            </div>
+            <div class="mb-3">
+                <label for="img" class="form-label">Địa chỉ hình ảnh</label>
+                <input type="text" class="form-control" id="img" value="<%= device.img %>" name="img">
+            </div>
+            <input type="submit" class="btn btn-primary" value="Lưu">
+        </form>
     </div>
 </body>
 

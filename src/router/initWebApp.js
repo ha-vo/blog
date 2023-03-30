@@ -62,6 +62,7 @@ const initWebApp = function (app) {
     router.get('/login', controllers.getLoginPage)
     router.get('/auth/facebook', passportFacebook.authenticate('facebook'))
     router.get('/auth/facebook/callback', passportFacebook.authenticate('facebook', { failureRedirect: '/' }), controllers.passPortAuthenFacebook, controllers.getHomePage)
+    router.get('/lesson/:user/:id/:index', controllers.checkLogin, controllers.getLessonsPage)
     app.use('/', router)
 }
 
@@ -78,7 +79,6 @@ const posts = function (app) {
     routerPosts.post('/create', controllers.create)
     routerPosts.put('/:id', controllers.update)
     routerPosts.delete('/:id', controllers.deletePost)
-
     app.use('/posts', controllers.checkLogin, routerPosts)
 }
 

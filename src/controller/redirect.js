@@ -84,13 +84,14 @@ const deletePost = (req, res, next) => {
 }
 
 const getPost = (req, res, next) => {
+    let id = req.params.id
     let login = req.login
     let user1 = req.username
     lesson.find({ courseID: req.params.id })
         .then((data) => {
             model.findById(req.params.id)
                 .then(device => {
-                    res.render('detailCourse', { device, login, user1, data })
+                    res.render('detailCourse', { device, login, user1, data, id })
                 })
                 .catch(next)
         }).catch((err) => res.send(err))
@@ -202,9 +203,28 @@ const addLesson = (req, res, next) => {
         .then(() => res.redirect('back'))
         .catch(err => res.send(err))
 }
+
+const getLessonsPage = (req, res, next) => {
+    let index = req.params.index
+    if (!index) index = 1
+    let login = req.login
+    let id = req.params.id
+    let user1 = req.params.user
+    user.updateOne({ filter: { username: user1 }, update: { courseID: id } })
+        .then(() => {
+            lesson.find({ courseID: id })
+                .then((data) => {
+                    console.log(data)
+                    res.render('lessons', { id, user1, data, login, index })
+                })
+        })
+        .catch((err) => { response.send(err) })
+}
 export default {
     getHomePage, getCreatePages, create,
     getControllerPages, getPage,
     update, deletePost, getPost, getLoginPage, checkLogin,
-    passPortAuthenLocal, passPortAuthenFacebook, getLessonPage, addLesson
+    passPortAuthenLocal, passPortAuthenFacebook, getLessonPage, addLesson,
+    getLessonsPage
+
 }
