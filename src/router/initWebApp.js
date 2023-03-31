@@ -34,7 +34,7 @@ passportLocal.deserializeUser(function (user, cb) {
 passportFacebook.use(new FacebookStrategy({
     clientID: "763249841771031",
     clientSecret: "ca5f90d84d228f5dfd69f470ec5e2dc5",
-    callbackURL: "https://adad-113-161-210-139.ap.ngrok.io/auth/facebook/callback"
+    callbackURL: "https://f838-2001-ee0-5363-2cb0-f58f-afb8-85b1-6aea.ap.ngrok.io/auth/facebook/callback"
 },
     function (accessToken, refreshToken, profile, cb) {
         return cb(null, profile)
@@ -64,6 +64,8 @@ const initWebApp = function (app) {
     router.get('/auth/facebook/callback', passportFacebook.authenticate('facebook', { failureRedirect: '/' }), controllers.passPortAuthenFacebook, controllers.getHomePage)
     router.get('/logout', controllers.logout, controllers.checkLogin, controllers.getHomePage)
     router.get('/mycourses', controllers.checkLogin, controllers.getMyCourses)
+    router.get('/signup', controllers.getSignUpPage)
+    router.post('/signup', controllers.addUser)
     app.use('/', router)
 }
 const posts = function (app) {
@@ -83,6 +85,7 @@ const lessonRouter = function (app) {
     routerLesson.get('/:id/updatePage', controllers.checkLogin, controllers.getUpdateLessonPage)
     routerLesson.get('/:user/:id', controllers.checkLogin, controllers.getLessonsPage)
     routerLesson.put('/:id', controllers.updateLesson)
+    routerLesson.delete('/user/:id', controllers.deleteLessonUser)
     routerLesson.delete('/:id', controllers.deleteLesson)
     app.use('/lesson', routerLesson)
 }

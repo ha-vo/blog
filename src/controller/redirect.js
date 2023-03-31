@@ -168,7 +168,6 @@ const passPortAuthenLocal = function (req, res, next) {
     jwt.sign({ name }, privateKey, { algorithm: 'RS256' }, function (err, token) {
         if (!err) {
             res.cookie('token', token)
-
             req.login = 1
             req.username = user1
             res.redirect('/')
@@ -223,6 +222,7 @@ const getLessonsPage = (req, res, next) => {
     let login = req.login
     let id = req.params.id
     let user1 = req.params.user
+
     mycourses.create({
         username: user1,
         courseID: id,
@@ -235,6 +235,7 @@ const getLessonsPage = (req, res, next) => {
                 })
         })
         .catch((err) => { response.send(err) })
+
 }
 
 const getUpdateLessonPage = (req, res, next) => {
@@ -274,17 +275,48 @@ const logout = (req, res, next) => {
 const getMyCourses = (req, res, next) => {
     let user1 = req.username
     let login = req.login
-    mycourses.find({ username: user1 })
+    mycourses.find({ username: user1 }).populate('courseID')
         .then((data) => {
-            console.log(user1)
-            res.render('mycourse', { data, user1, login })
+            res.render('mycourse', { data, login, user1 })
         }).catch((err) => { res.send(err) })
 }
+
+const deleteLessonUser = (req, res, next) => {
+    let id = req.params.id
+    mycourses.deleteOne({ _id: id })
+        .then(() => {
+            res.redirect('back')
+        })
+}
+const addUser = (req, res, next) => {
+    let username = req.body.username
+    let password = req.body.password
+    user.findOne({ username: username })
+        .then((data) => {
+            if (data) {
+                console.log(data)
+                res.render('signup')
+            }
+            else {
+                user.create({ username, password })
+                    .then(res.redirect('/'))
+            }
+        })
+        .catch()
+}
+
+const getSignUpPage = (req, res, next) => {
+    res.render('signup')
+}
+
+
+
 export default {
     getHomePage, getCreatePages, create,
     getControllerPages, getPage,
     update, deletePost, getPost, getLoginPage, checkLogin,
     passPortAuthenLocal, passPortAuthenFacebook, addLesson,
-    getLessonsPage, getUpdateLessonPage, updateLesson, deleteLesson, logout, getAddLessonPage, getMyCourses
+    getLessonsPage, getUpdateLessonPage, updateLesson, deleteLesson, logout, getAddLessonPage, getMyCourses,
+    deleteLessonUser, getSignUpPage, addUser
 
 }

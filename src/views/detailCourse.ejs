@@ -95,7 +95,7 @@
                     <%if (data.length> 0) {%>
                         <%if (user1=='admin' ) {%>
                             <a class="btn btn-dark" href="/lesson/<%=user1%>/<%=id%>">Xem các bài học</a>
-                            <%}else{%>
+                            <%}else if (login==1){%>
                                 <a class="btn btn-dark" href="/lesson/<%=user1%>/<%=id%>">Học Ngay</a>
                                 <%}%>
                                     <%}else{%>
